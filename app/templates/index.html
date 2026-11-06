@@ -64,18 +64,26 @@
                 {% if applications %}
                     <table>
                         <tr>
-                            <th>Компания</th>
-                            <th>Должность</th>
-                            <th>Статус</th>
-                            <th>Дата</th>
+			<th>Компания</th>
+			<th>Должность</th>
+			<th>Статус</th>
+			<th>Дата</th>
+			<th>Действия</th>
                         </tr>
 
                         {% for item in applications %}
                         <tr>
                             <td>{{ item.company }}</td>
-                            <td>{{ item.position }}</td>
-                            <td>{{ item.status }}</td>
-                            <td>{{ item.applied_date }}</td>
+			    <td>{{ item.position }}</td>
+		            <td>{{ item.status }}</td>
+			    <td>{{ item.applied_date }}</td>
+				<td>
+    <a href="/applications/{{ item.id }}/edit">Редактировать</a>
+<form action="/applications/{{ item.id }}/delete" method="post"
+      onsubmit="return confirm('Удалить эту вакансию?');">
+    <button type="submit" class="delete-button">Удалить</button>
+</form>
+</td>
                         </tr>
                         {% endfor %}
                     </table>

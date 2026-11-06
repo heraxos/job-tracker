@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование вакансии — Job Tracker</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Job Tracker</h1>
+            <p>Редактирование вакансии</p>
+        </header>
+
+        <section class="applications">
+            <h2>Изменить данные</h2>
+
+            <form action="/applications/{{ application.id }}/edit" method="post">
+                <label>Компания</label>
+                <input
+                    type="text"
+                    name="company"
+                    value="{{ application.company }}"
+                    required
+                >
+
+                <label>Должность</label>
+                <input
+                    type="text"
+                    name="position"
+                    value="{{ application.position }}"
+                    required
+                >
+
+                <label>Статус</label>
+                <select name="status">
+                    <option value="Applied" {% if application.status == "Applied" %}selected{% endif %}>Отклик отправлен</option>
+                    <option value="Interview" {% if application.status == "Interview" %}selected{% endif %}>Собеседование</option>
+                    <option value="Test" {% if application.status == "Test" %}selected{% endif %}>Тестовое задание</option>
+                    <option value="Rejected" {% if application.status == "Rejected" %}selected{% endif %}>Отказ</option>
+                    <option value="Offer" {% if application.status == "Offer" %}selected{% endif %}>Предложение</option>
+                </select>
+
+                <button type="submit">Сохранить изменения</button>
+            </form>
+
+            <p><a href="/">Вернуться к вакансиям</a></p>
+        </section>
+    </div>
+</body>
+</html>

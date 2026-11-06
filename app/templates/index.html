@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Tracker</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Job Tracker</h1>
+            <p>Управляй поиском работы в одном месте</p>
+        </header>
+
+        <main>
+            <section class="welcome">
+                <h2>Мой поиск работы</h2>
+                <p>Отслеживай вакансии, отклики и собеседования.</p>
+            </section>
+
+            <section class="stats">
+                <div class="stat-card">
+                    <h3>Всего откликов</h3>
+                    <p>{{ total }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Собеседования</h3>
+                    <p>{{ interviews }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Предложения</h3>
+                    <p>{{ offers }}</p>
+                </div>
+            </section>
+
+            <section class="applications">
+                <h2>Добавить вакансию</h2>
+
+                <form action="/applications" method="post">
+                    <label>Компания</label>
+                    <input type="text" name="company" required>
+
+                    <label>Должность</label>
+                    <input type="text" name="position" required>
+
+                    <label>Статус</label>
+                    <select name="status">
+                        <option value="Applied">Отклик отправлен</option>
+                        <option value="Interview">Собеседование</option>
+                        <option value="Test">Тестовое задание</option>
+                        <option value="Rejected">Отказ</option>
+                        <option value="Offer">Предложение</option>
+                    </select>
+
+                    <button type="submit">Добавить отклик</button>
+                </form>
+            </section>
+
+            <section class="applications">
+                <h2>Мои отклики</h2>
+
+                {% if applications %}
+                    <table>
+                        <tr>
+                            <th>Компания</th>
+                            <th>Должность</th>
+                            <th>Статус</th>
+                            <th>Дата</th>
+                        </tr>
+
+                        {% for item in applications %}
+                        <tr>
+                            <td>{{ item.company }}</td>
+                            <td>{{ item.position }}</td>
+                            <td>{{ item.status }}</td>
+                            <td>{{ item.applied_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p class="empty">Пока нет добавленных вакансий.</p>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+</body>
+</html>

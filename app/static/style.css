@@ -1,0 +1,117 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6fa;
+    color: #202938;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+header {
+    margin-bottom: 35px;
+}
+
+header h1 {
+    margin-bottom: 8px;
+    font-size: 32px;
+}
+
+header p {
+    color: #697586;
+}
+
+.welcome,
+.stat-card,
+.applications {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.welcome {
+    background: #243b68;
+    color: white;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.stat-card h3 {
+    font-size: 14px;
+    color: #697586;
+}
+
+.stat-card p {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.empty {
+    color: #8792a2;
+}
+
+@media (max-width: 650px) {
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 500px;
+}
+
+input,
+select {
+    padding: 12px;
+    border: 1px solid #dce1e8;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+button {
+    padding: 13px;
+    background: #243b68;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:hover {
+    background: #34548d;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th,
+td {
+    padding: 14px;
+    border-bottom: 1px solid #e8ebf0;
+}
+
+th {
+    color: #697586;
+}

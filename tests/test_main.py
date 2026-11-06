@@ -71,3 +71,34 @@ def test_search_application():
         if application is not None:
             db.delete(application)
             db.commit()
+
+def test_filter_by_status():
+    company_name = "Filter Test Company"
+
+    with SessionLocal() as db:
+        application = JobApplication(
+            company=company_name,
+            position="Python Developer",
+            status="Interview",
+            applied_date=date.today()
+        )
+
+        db.add(application)
+        db.commit()
+
+    response = client.get("/?status=Interview")
+
+    assert response.status_code == 200
+    assert company_name in response.text
+    assert "Собеседование" in response.text
+
+    with SessionLocal() as db:
+        application = db.scalar(
+            select(JobApplication).where(
+                JobApplication.company == company_name
+            )
+        )
+
+        if application is not None:
+            db.delete(application)
+            db.commit()

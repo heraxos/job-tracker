@@ -102,3 +102,67 @@ def test_filter_by_status():
         if application is not None:
             db.delete(application)
             db.commit()
+
+def test_edit_application():
+    company_name = "Edit Test Company"
+
+    with SessionLocal() as db:
+        application = JobApplication(
+            company=company_name,
+            position="Junior Developer",
+            status="Applied",
+            applied_date=date.today()
+        )
+
+        db.add(application)
+        db.commit()
+        application_id = application.id
+
+    response = client.post(
+        f"/applications/{application_id}/edit",
+        data={
+            "company": "Updated Test Company",
+            "position": "Python Developer",
+            "status": "Interview"
+        },
+        follow_redirects=False
+    )
+
+    assert response.status_code == 303
+
+    with SessionLocal() as db:
+        updated = db.get(JobApplication, application_id)
+
+        assert updated is not None
+        assert updated.company == "Updated Test Company"
+        assert updated.position == "Python Developer"
+        assert updated.status == "Interview"
+
+        db.delete(updated)
+        db.commit()
+
+def test_delete_application():
+    company_name = "Delete Test Company"
+
+    with SessionLocal() as db:
+        application = JobApplication(
+            company=company_name,
+            position="Python Developer",
+            status="Applied",
+            applied_date=date.today()
+        )
+
+        db.add(application)
+        db.commit()
+        application_id = application.id
+
+    response = client.post(
+        f"/applications/{application_id}/delete",
+        follow_redirects=False
+    )
+
+    assert response.status_code == 303
+
+    with SessionLocal() as db:
+        deleted = db.get(JobApplication, application_id)
+        assert deleted is None

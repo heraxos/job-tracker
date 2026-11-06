@@ -1,4 +1,3 @@
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 
@@ -19,3 +18,18 @@ SessionLocal = sessionmaker(
     autoflush=False,
     autocommit=False
 )
+
+
+def create_test_database():
+    test_engine = create_engine(
+        "sqlite:///./test_job_tracker.db",
+        connect_args={"check_same_thread": False}
+    )
+
+    TestSessionLocal = sessionmaker(
+        bind=test_engine,
+        autoflush=False,
+        autocommit=False
+    )
+
+    return test_engine, TestSessionLocal

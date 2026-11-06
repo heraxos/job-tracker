@@ -1,12 +1,24 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 from datetime import date
-from app.main import app
-from app.database import SessionLocal
+from app.main import app, get_db
+from app.database import Base, create_test_database
 from app.models import JobApplication
 
 client = TestClient(app)
 
+test_engine, TestSessionLocal = create_test_database()
+Base.metadata.create_all(bind=test_engine)
+
+def override_get_db():
+    db = TestSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+app.dependency_overrides[get_db] = override_get_db
 
 def test_homepage():
     response = client.get("/")
@@ -30,7 +42,7 @@ def test_add_application():
 
     assert response.status_code == 303
 
-    with SessionLocal() as db:
+    with TestSessionLocal() as db:
         application = db.scalar(
             select(JobApplication).where(
                 JobApplication.company == company_name
@@ -46,7 +58,7 @@ def test_add_application():
 def test_search_application():
     company_name = "Search Test Company"
 
-    with SessionLocal() as db:
+    with TestSessionLocal() as db:
         application = JobApplication(
             company=company_name,
             position="Junior Python Developer",
@@ -62,7 +74,7 @@ def test_search_application():
     assert company_name in response.text
     assert "Junior Python Developer" in response.text
 
-    with SessionLocal() as db:
+    with TestSessionLocal() as db:
         application = db.scalar(
             select(JobApplication).where(
                 JobApplication.company == company_name
@@ -75,7 +87,7 @@ def test_search_application():
 def test_filter_by_status():
     company_name = "Filter Test Company"
 
-    with SessionLocal() as db:
+    with TestSessionLocal() as db:
         application = JobApplication(
             company=company_name,
             position="Python Developer",
@@ -92,7 +104,7 @@ def test_filter_by_status():
     assert company_name in response.text
     assert "Собеседование" in response.text
 
-    with SessionLocal() as db:
+    with TestSessionLocal() as db:
         application = db.scalar(
             select(JobApplication).where(
                 JobApplication.company == company_name
@@ -106,7 +118,7 @@ def test_filter_by_status():
 def test_edit_application():
     company_name = "Edit Test Company"
 
-    with SessionLocal() as db:
+    with TestSessionLocal() as db:
         application = JobApplication(
             company=company_name,
             position="Junior Developer",
@@ -130,7 +142,7 @@ def test_edit_application():
 
     assert response.status_code == 303
 
-    with SessionLocal() as db:
+    with TestSessionLocal() as db:
         updated = db.get(JobApplication, application_id)
 
         assert updated is not None
@@ -144,7 +156,7 @@ def test_edit_application():
 def test_delete_application():
     company_name = "Delete Test Company"
 
-    with SessionLocal() as db:
+    with TestSessionLocal() as db:
         application = JobApplication(
             company=company_name,
             position="Python Developer",
@@ -163,6 +175,6 @@ def test_delete_application():
 
     assert response.status_code == 303
 
-    with SessionLocal() as db:
+    with TestSessionLocal() as db:
         deleted = db.get(JobApplication, application_id)
         assert deleted is None

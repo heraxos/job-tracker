@@ -61,6 +61,30 @@
             <section class="applications">
                 <h2>Мои отклики</h2>
 
+<form action="/" method="get" class="search-form">
+    <input
+        type="text"
+        name="search"
+        placeholder="Поиск по компании или должности..."
+        value="{{ search }}"
+    >
+
+    <select name="status">
+        <option value="">Все статусы</option>
+        <option value="Applied" {% if status == "Applied" %}selected{% endif %}>Отклик отправлен</option>
+        <option value="Interview" {% if status == "Interview" %}selected{% endif %}>Собеседование</option>
+        <option value="Test" {% if status == "Test" %}selected{% endif %}>Тестовое задание</option>
+        <option value="Rejected" {% if status == "Rejected" %}selected{% endif %}>Отказ</option>
+        <option value="Offer" {% if status == "Offer" %}selected{% endif %}>Предложение</option>
+    </select>
+
+    <button type="submit">Применить</button>
+
+    {% if search or status %}
+        <a href="/">Сбросить</a>
+    {% endif %}
+</form>
+
                 {% if applications %}
                     <table>
                         <tr>

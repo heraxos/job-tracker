@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select, func
+from sqlalchemy import select, or_
 
 from app.database import engine, Base, SessionLocal
 from app.models import JobApplication
@@ -24,20 +24,43 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @app.get("/")
-async def home(request: Request):
+async def home(
+    request: Request,
+    search: str = "",
+    status: str = ""
+):
     with SessionLocal() as db:
-        applications = db.scalars(
-            select(JobApplication).order_by(
-                JobApplication.id.desc()
-            )
+        all_applications = db.scalars(
+            select(JobApplication)
         ).all()
 
-        total = len(applications)
+        statement = select(JobApplication).order_by(
+            JobApplication.id.desc()
+        )
+
+        if search.strip():
+            pattern = f"%{search.strip()}%"
+
+            statement = statement.where(
+                or_(
+                    JobApplication.company.ilike(pattern),
+                    JobApplication.position.ilike(pattern)
+                )
+            )
+
+        if status:
+            statement = statement.where(
+                JobApplication.status == status
+            )
+
+        applications = db.scalars(statement).all()
+
+        total = len(all_applications)
         interviews = sum(
-            item.status == "Interview" for item in applications
+            item.status == "Interview" for item in all_applications
         )
         offers = sum(
-            item.status == "Offer" for item in applications
+            item.status == "Offer" for item in all_applications
         )
 
     return templates.TemplateResponse(
@@ -47,7 +70,9 @@ async def home(request: Request):
             "applications": applications,
             "total": total,
             "interviews": interviews,
-            "offers": offers
+            "offers": offers,
+            "search": search,
+            "status": status
         }
     )
 
@@ -70,7 +95,6 @@ async def add_application(
         db.commit()
 
     return RedirectResponse("/", status_code=303)
-
 
 
 @app.get("/applications/{application_id}/edit")
@@ -122,6 +146,7 @@ async def update_application(
         db.commit()
 
     return RedirectResponse("/", status_code=303)
+
 
 @app.post("/applications/{application_id}/delete")
 async def delete_application(application_id: int):

@@ -64,3 +64,23 @@ A web application for tracking job applications and managing the job search proc
 
 &#x20;  cd job-tracker
 
+
+
+\## Screenshots
+
+
+
+\### Dashboard
+
+
+
+!\[Job Tracker Dashboard](screenshots/dashboard.png)
+
+
+
+\### Dashboard — detailed view
+
+
+
+!\[Job Tracker Dashboard 2](screenshots/dashboard2.png)
+

@@ -4,3 +4,7 @@ __pycache__/
 job_tracker.db
 .pytest_cache/
 test_job_tracker.db
+.neon
+node_modules/
+.env
+.env.local

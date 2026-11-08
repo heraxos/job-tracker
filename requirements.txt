@@ -15,13 +15,17 @@ MarkupSafe==3.0.4
 opentelemetry-api==1.45.2
 packaging==26.3
 pluggy==1.7.0
+psycopg==3.3.8
+psycopg-binary==3.3.8
 pydantic==2.14.3
 pydantic_core==2.50.4
 Pygments==2.21.0
 pytest==9.2.0
+python-dotenv==1.2.4
 python-multipart==0.0.33
 SQLAlchemy==2.1.8
 starlette==1.10.0
 typing-inspection==0.4.5
 typing_extensions==4.16.0
+tzdata==2026.6
 uvicorn==0.54.0

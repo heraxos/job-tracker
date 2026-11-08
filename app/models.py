@@ -22,3 +22,8 @@ class JobApplication(Base):
         default="Applied"
     )
     applied_date: Mapped[date] = mapped_column(Date)
+
+    notes: Mapped[str | None] = mapped_column(
+    	String(1000),
+    	nullable=True
+    )

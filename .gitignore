@@ -8,3 +8,5 @@ test_job_tracker.db
 node_modules/
 .env
 .env.local
+test_job_tracker_backup.db
+migration_test.db
